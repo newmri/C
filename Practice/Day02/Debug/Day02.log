@@ -1,0 +1,4 @@
+﻿  Day02.cpp
+s:\jusin\c\practice\day02\day02.cpp(58): warning C4552: '+': operator has no effect; expected operator with side-effect
+  Day02.vcxproj -> S:\Jusin\C\Practice\Debug\Day02.exe
+  Day02.vcxproj -> S:\Jusin\C\Practice\Debug\Day02.pdb (Partial PDB)
