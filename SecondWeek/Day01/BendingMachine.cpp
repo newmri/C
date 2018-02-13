@@ -9,9 +9,9 @@ int main()
 	int readyMoney{}, sel{};
 	cout << "ÀÜµ· ÀÔ·Â: ";
 	cin >> readyMoney;
-	system("cls");
 
 	while (true) {
+		system("cls");
 		cout << "ÇöÀç ÀÜµ·: " << readyMoney << endl;
 		cout << "################# Menu #################" << endl;
 		cout << "1.ÄÝ¶ó(100¿ø) 2.»çÀÌ´Ù(200¿ø) 3.È¯Å¸(300¿ø) 4.ÀÜµ·¹ÝÈ¯" << endl;
