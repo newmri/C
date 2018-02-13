@@ -1,4 +1,2 @@
-﻿  Day02_02.cpp
-s:\jusin\c\secondweek\day02\day02_02.cpp(23): warning C4244: 'initializing': conversion from 'time_t' to 'int', possible loss of data
+﻿  Stars.cpp
   Day02.vcxproj -> S:\Jusin\C\SecondWeek\Debug\Day02.exe
-  Day02.vcxproj -> S:\Jusin\C\SecondWeek\Debug\Day02.pdb (Partial PDB)
