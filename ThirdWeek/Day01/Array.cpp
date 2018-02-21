@@ -16,8 +16,9 @@ int main()
 	for (int i = 0; i < 25; ++i) arr[i] = i + 1;
 
 	for (int i = 0; i < 5; ++i) {
+		// Tile: x + (width * y)
 		for (int j = 0; j < 5; ++j) cout << arr[j + i * 5] << " ";
-		for (int k = 0; k == 0; ++k) cout << endl;
+		cout << endl;
 	}
 
 	system("pause");

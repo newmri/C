@@ -42,9 +42,13 @@ void Rotate(int arr[3][3])
 	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 3; ++j) tmp[i][j] = arr[i][j];
 
-	for (int i = 0, k = 2; i < 3; ++i, --k) {
-		for (int j = 0; j < 3; ++j) arr[j][k] = tmp[i][j];
-	}
+	//for (int i = 0, k = 2; i < 3; ++i, --k) {
+	//	for (int j = 0; j < 3; ++j) arr[j][k] = tmp[i][j];
+	//}
+	// after column: row of before
+	// after row: (size - 1) - before column
+	for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) arr[j][(3-1)-i] = tmp[i][j];
+	
 }
 
 void ShowArray(int arr[3][3])
