@@ -1,0 +1,3 @@
+﻿  Assignmentcpp.cpp
+s:\jusin\c\forthweek\day01\assignmentcpp.cpp(160): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Day01.vcxproj -> S:\Jusin\C\ForthWeek\Debug\Day01.exe
