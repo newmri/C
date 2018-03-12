@@ -24,3 +24,8 @@ static char g_locationName[LOCATION_END][NAME_LEN]
 	"Town", "Novice Dungeon", "Intermediate Dungeon", "Advanced Dungeon"
 };
 
+static char g_jobName[JOB_END][NAME_LEN]
+{
+	"Warrior", "Thief", "Archer", "Magician"
+};
+

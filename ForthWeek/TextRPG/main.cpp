@@ -5,9 +5,7 @@ int main()
 	bool run{ true };
 
 	InitFont();
-
 	while (run) run = Update();
-	DeAllocCharacter(g_player, 1);
-	
+	DeleteCharacter(&g_player, 1);
 
 }

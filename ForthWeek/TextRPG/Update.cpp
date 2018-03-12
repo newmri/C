@@ -7,6 +7,8 @@ bool Update()
 		else PlayerLocationFunc = DungeonProcess;
 		return PlayerLocationFunc();
 	}
+
+	else LoadData(&g_player);
 	return SelectMainMenu();
 }
 
@@ -20,13 +22,14 @@ void ShowCharacterInfo(Character* character)
 		cout << endl;
 		SetColor(GRAY);
 		cout << "Name: " << g_chracterName[character->m_info.name] << endl;
-		cout << "Job: " << character->m_info.job << endl;
+		cout << "Job: " << g_jobName[character->m_info.job] << endl;
 		cout << "Location: " << g_locationName[character->m_info.location] << endl;
 		cout << "HP: " << character->m_info.hp << " / " << character->m_info.maxHP << endl;
 		cout << "Level: " << character->m_info.lvl << endl;
 		cout << "Damage: " << character->m_info.damage << endl;
 		cout << "Defense: " << character->m_info.defense << endl;
-		cout << "EXP: " << character->m_info.exp << endl;
+		if (character->m_info.name == PLAYER) cout << "EXP: " << character->m_info.exp << " / " << character->m_info.maxEXP << endl;
+		else cout << "EXP: " << character->m_info.exp << endl;
 		cout << endl;
 	}
 
@@ -60,7 +63,11 @@ bool SelectMainMenu()
 			MainMenuFunc[sel - 1]();
 			return true;
 		}
-		if (sel == SEL_EXIT) return false;
+		if (sel == SEL_EXIT) {
+			SaveData(g_player);
+			DeleteCharacter(&g_player, 1);
+			exit(1);
+		}
 		ShowError();
 	}
 }
@@ -71,10 +78,7 @@ void ShowJobSelectMenu()
 	SetColor(RED);
 	cout << "---- Select Job ----" << endl;
 	SetColor(GRAY);
-	cout << "1. Warrior" << endl;
-	cout << "2. Thief" << endl;
-	cout << "3. Archer" << endl;
-	cout << "4. Magician" << endl;
+	for (int i = 0; i < JOB_EXIT - 1; ++i) cout << i + 1 << ". " << g_jobName[i] << endl;
 	cout << "5. Exit" << endl;
 	SetColor(WHITE);
 	cout << "Select: ";
@@ -91,16 +95,15 @@ void ShowError()
 void SelectJob()
 {
 	int sel{};
-	JOB job{ JOB_END };
+	JOB job = JOB_END;
 
 	while (true) {
 		ShowJobSelectMenu();
 
 		cin >> sel;
-		if (sel > 0 && sel < JOB_EIXT) {
+		if (sel > 0 && sel <= JOB_EXIT) {
 			job = static_cast<JOB>(sel);
-			if(g_player == nullptr) g_player = new Character;
-			//AllocCharacter(g_player, 1);
+			CreateCharacter(&g_player, 1);
 			break;
 		}
 		ShowError();
@@ -108,11 +111,11 @@ void SelectJob()
 
 
 	switch (job) {
-	case WARRIOR: InitCharacter(CharacterInfo(PLAYER, "Warrior", TOWN, 130, 130, 1, 10, 10), g_player); break;
-	case THIEF: InitCharacter(CharacterInfo(PLAYER, "Thief", TOWN, 80, 80, 1, 15, 5), g_player); break;
-	case ARCHER: InitCharacter(CharacterInfo(PLAYER, "Archer", TOWN, 90, 90, 1, 8, 8), g_player); break;
-	case MAGICIAN: InitCharacter(CharacterInfo(PLAYER, "Magician", TOWN, 75, 75, 1, 20, 1), g_player); break;
-	case JOB_EIXT: break;
+	case WARRIOR: InitCharacter(CharacterInfo(PLAYER, WARRIOR, TOWN, 130, 130, 1, 10, 10), g_player); break;
+	case THIEF: InitCharacter(CharacterInfo(PLAYER, THIEF, TOWN, 80, 80, 1, 15, 5), g_player); break;
+	case ARCHER: InitCharacter(CharacterInfo(PLAYER, ARCHER, TOWN, 90, 90, 1, 8, 8), g_player); break;
+	case MAGICIAN: InitCharacter(CharacterInfo(PLAYER, MAGICIAN, TOWN, 75, 75, 3, 25, 1), g_player); break;
+	case JOB_EXIT: break;
 	default:
 		ShowError();
 		break;
@@ -169,11 +172,11 @@ void ShowDungeonMenu()
 
 bool DungeonProcess()
 {
-	if (g_monster == nullptr) g_monster = new Character;
+	CreateCharacter(&g_monster, 1);
 	int lvl{ g_player->m_info.location };
 	InitCharacter(CharacterInfo(static_cast<CHARACTER_NAME>(g_player->m_info.location),
-		"Warrior", g_player->m_info.location,
-		lvl * 100, lvl * 100, lvl, lvl * 15, lvl * 5, lvl * 5), g_monster);
+		WARRIOR, g_player->m_info.location,
+		lvl * 100, lvl * 100, lvl, lvl * 15, lvl * 5, lvl * 5, lvl * 7), g_monster);
 
 	int sel{};
 	while (true) {
@@ -196,4 +199,32 @@ bool DungeonProcess()
 		}
 		else ShowError();
 	}
+}
+
+void SaveData(Character* character)
+{
+	if (character != nullptr) {
+		FILE* fp = nullptr;
+		errno_t err = fopen_s(&fp, "../DB/SaveFile.db", "wb");
+		if (err == 0) {
+				
+			fwrite(&character->m_info, sizeof(character->m_info), 1, fp);
+			fclose(fp);
+		}
+	}
+}
+
+void LoadData(Character** character)
+{
+	FILE* fp = nullptr;
+	errno_t err = fopen_s(&fp, "../DB/SaveFile.db", "rb");
+	if (err == 0) {
+		CreateCharacter(character, 1);
+		CharacterInfo info;
+		fread(&info, sizeof(info), 1, fp);
+		InitCharacter(info, *character);
+		fclose(fp);
+	}
+
+	return;
 }

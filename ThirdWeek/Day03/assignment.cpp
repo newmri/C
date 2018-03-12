@@ -135,7 +135,7 @@ void SelectGame()
 		cin >> sel;
 		if (sel == 1) PlayBaseBallGame();
 		else if (sel == 2) PlayBingGoGame();
-	}
+	}	
 }
 
 void PlayBingGoGame()

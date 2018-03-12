@@ -6,16 +6,18 @@ void InitCharacter(CharacterInfo src, Character* dest)
 	memcpy(&dest->m_info, &src, sizeof(src));
 }
 
-void AllocCharacter(Character* character, int num)
+void CreateCharacter(Character** character, int num)
 {
-	if (character != nullptr) character = new Character[num]{};
+	*character = new Character[num];
 }
 
-void DeAllocCharacter(Character* character, int num)
+void DeleteCharacter(Character** character, int num)
 {
-	if (character != nullptr) {
-		if (num > 1) delete[] character;
-		else delete character;
+	if (*character != nullptr) {
+		SaveData(*character);
+		if (num > 1) delete[] *character;
+		else delete *character;
+		*character = nullptr;
 	}
 }
 
@@ -32,12 +34,14 @@ bool Attack(Character* from, Character* to)
 
 		if (from->m_info.hp <= 0) {
 			to->m_info.exp += from->m_info.exp;
+			CheckLevelUp(to);
 			Die(from);
 			return true;
 		}
 
 		if (to->m_info.hp <= 0) {
 			from->m_info.exp += to->m_info.exp;
+			CheckLevelUp(from);
 			Die(to);
 			return true;
 		}
@@ -55,8 +59,8 @@ void Die(Character* character)
 		cout << g_chracterName[character->m_info.name] << " is dead now!" << endl;
 		if (character->m_info.name == PLAYER) {
 			cout << "GAME OVER!" << endl;
-			DeAllocCharacter(g_player, 1);
-			DeAllocCharacter(g_monster, 1);
+			DeleteCharacter(&g_player, 1);
+			DeleteCharacter(&g_monster, 1);
 			SetColor(WHITE);
 			system("pause");
 			exit(0);
@@ -67,3 +71,18 @@ void Die(Character* character)
 	}
 }
 
+void CheckLevelUp(Character* character)
+{
+	if (character != nullptr) {
+		while (character->m_info.exp >= character->m_info.maxEXP) {
+			character->m_info.exp -= character->m_info.maxEXP;
+			character->m_info.lvl += 1;
+			character->m_info.damage += 5;
+			character->m_info.defense += 2;
+			character->m_info.maxHP += 5;
+			character->m_info.hp = character->m_info.maxHP;
+			character->m_info.maxEXP = character->m_info.lvl * 5;
+		}
+
+	}
+}

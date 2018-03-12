@@ -2,12 +2,13 @@
 
 using namespace std;
 
-enum BEVERAGE { COLAR = 1, SPRITE, FANTA, RETURN_MONEY };
-enum BEVERAGE_PRICE { COLAR_PRICE = 100, SPRITE_PRICE = 200, FANTA_PRICE = 300 };
+enum BEVERAGE { COLA = 1, SPRITE, FANTA, RETURN_MONEY };
+enum BEVERAGE_PRICE { COLA_PRICE = 100, SPRITE_PRICE = 200, FANTA_PRICE = 300 };
 
 void SetMoney(int& money);
 void ShowMenu(int& money);
 bool Update(int& sel, int& money);
+bool BuyDrink(BEVERAGE_PRICE price, int& money);
 
 int main()
 {
@@ -23,17 +24,17 @@ int main()
 
 void SetMoney(int& money)
 {
-	cout << "ÀÜµ· ÀÔ·Â: ";
+	cout << "Input change: ";
 	cin >> money;
 }
 void ShowMenu(int& money)
 {
 	system("cls");
-	cout << "ÇöÀç ÀÜµ·: " << money << endl;
+	cout << "Current Change: " << money << endl;
 	cout << "################# Menu #################" << endl;
-	cout << "1.ÄÝ¶ó(100¿ø) 2.»çÀÌ´Ù(200¿ø) 3.È¯Å¸(300¿ø) 4.ÀÜµ·¹ÝÈ¯" << endl;
+	cout << "1.Cola(100¿ø) 2.Sprite(200¿ø) 3.Fanta(300¿ø) 4.Return change" << endl;
 	cout << "########################################" << endl;
-	cout << "¼±ÅÃ: ";
+	cout << "Select: ";
 }
 
 bool Update(int& sel, int& money)
@@ -41,18 +42,21 @@ bool Update(int& sel, int& money)
 	bool ret{ false };
 	cin >> sel;
 	switch (sel) {
-	case BEVERAGE::COLAR:
-		if (money - BEVERAGE_PRICE::COLAR_PRICE < 0) break;
-		money -= BEVERAGE_PRICE::COLAR_PRICE; break;
+	case BEVERAGE::COLA:
+		ret = BuyDrink(BEVERAGE_PRICE::COLA_PRICE, money); break;
 	case BEVERAGE::SPRITE:
-		if (money - BEVERAGE_PRICE::SPRITE_PRICE < 0) break;
-		money -= BEVERAGE_PRICE::SPRITE_PRICE; break;
+		ret = BuyDrink(BEVERAGE_PRICE::SPRITE_PRICE, money); break;
 	case BEVERAGE::FANTA:
-		if (money - BEVERAGE_PRICE::FANTA_PRICE < 0) break;
-		money -= BEVERAGE_PRICE::FANTA_PRICE; break;
-	case BEVERAGE::RETURN_MONEY: cout << "ÇöÀç °Å½º¸§µ·: " << money << endl; ret = true; break;
-	default: cout << "¿À·ù!" << endl; break;
+		ret = BuyDrink(BEVERAGE_PRICE::FANTA_PRICE, money); break;
+	case BEVERAGE::RETURN_MONEY: cout << "Current Change: " << money << endl; ret = true; break;
+	default: cout << "Error has been occurred!" << endl; break;
 	}
 
 	return ret;
+}
+
+bool BuyDrink(BEVERAGE_PRICE price, int& money)
+{
+	if (money >= price) money -= price;
+	return false;
 }
